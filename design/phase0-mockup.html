@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量迹 · Phase 0 视觉稿</title>
+<style>
+  :root {
+    --bg: #F7F4EF;
+    --bg-grad-1: rgba(201, 111, 74, .16);
+    --bg-grad-2: rgba(63, 127, 114, .12);
+    --surface: rgba(255, 255, 255, .72);
+    --surface-strong: rgba(255, 255, 255, .93);
+    --sheet: #FBF9F5;
+    --ink: #1C1B18;
+    --ink-rgb: 28, 27, 24;
+    --ink-2: #4A463F;
+    --muted: #6F6A63;
+    --line: rgba(28, 27, 24, .09);
+    --line-strong: rgba(28, 27, 24, .16);
+    --highlight: rgba(255, 255, 255, .72);
+    --clay: #C96F4A; --clay-rgb: 201, 111, 74;
+    --teal: #3F7F72; --teal-rgb: 63, 127, 114;
+    --ochre: #B98A3E; --ochre-rgb: 185, 138, 62;
+    --indigo: #5D6FA8; --indigo-rgb: 93, 111, 168;
+    --plum: #8A6478; --plum-rgb: 138, 100, 120;
+    --sage: #6F8A63; --sage-rgb: 111, 138, 99;
+    --fab-bg: #1C1B18;
+    --fab-fg: #F7F4EF;
+    --frame-bg: linear-gradient(155deg, rgba(255,255,255,.97), rgba(255,255,255,.62));
+    --frame-shadow: 0 40px 80px rgba(60, 48, 38, .13), 0 10px 24px rgba(60, 48, 38, .05);
+  }
+
+  [data-theme="dark"] {
+    --bg: #0E0F11;
+    --bg-grad-1: rgba(224, 138, 100, .10);
+    --bg-grad-2: rgba(95, 168, 152, .08);
+    --surface: rgba(26, 27, 30, .78);
+    --surface-strong: rgba(34, 35, 39, .96);
+    --sheet: #17181C;
+    --ink: #F3EFE8;
+    --ink-rgb: 243, 239, 232;
+    --ink-2: #CFC8BD;
+    --muted: #A9A39A;
+    --line: rgba(255, 255, 255, .10);
+    --line-strong: rgba(255, 255, 255, .18);
+    --highlight: rgba(255, 255, 255, .08);
+    --clay: #E08A64; --clay-rgb: 224, 138, 100;
+    --teal: #5FA898; --teal-rgb: 95, 168, 152;
+    --ochre: #D2A55A; --ochre-rgb: 210, 165, 90;
+    --indigo: #8193CC; --indigo-rgb: 129, 147, 204;
+    --plum: #B1849A; --plum-rgb: 177, 132, 154;
+    --sage: #8FAE7E; --sage-rgb: 143, 174, 126;
+    --fab-bg: #F3EFE8;
+    --fab-fg: #1C1B18;
+    --frame-bg: linear-gradient(155deg, #26272B, #141518);
+    --frame-shadow: 0 40px 90px rgba(0, 0, 0, .55), 0 10px 24px rgba(0, 0, 0, .35);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: "MiSans", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    background:
+      radial-gradient(900px 620px at 82% -8%, var(--bg-grad-1), transparent 62%),
+      radial-gradient(760px 560px at 4% 102%, var(--bg-grad-2), transparent 64%),
+      var(--bg);
+    transition: background-color .35s ease, color .35s ease;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: .035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+  }
+
+  button { -webkit-tap-highlight-color: transparent; }
+  button:focus-visible { outline: 2px solid var(--clay); outline-offset: 2px; }
+
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .icon {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .page { position: relative; z-index: 1; min-height: 100vh; }
+
+  .page-header {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 34px 40px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -.06em;
+  }
+  .brand-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -.02em;
+  }
+  .badge {
+    padding: 4px 8px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .08em;
+  }
+  .brand-sub {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: .02em;
+  }
+  .theme-toggle {
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+  .theme-toggle button {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 16px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  .theme-toggle button.active { background: var(--ink); color: var(--bg); }
+
+  .stage {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 26px 40px 46px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 28px;
+  }
+  .phone-wrap { display: flex; flex-direction: column; gap: 12px; }
+  .phone-label {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding-left: 4px;
+    color: var(--ink-2);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .phone-label .num { color: var(--clay); font-size: 9px; letter-spacing: .1em; }
+  .phone-label .label-note {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 400;
+  }
+  .phone {
+    position: relative;
+    width: 360px;
+    height: 780px;
+    padding: 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 42px;
+    background: var(--frame-bg);
+    box-shadow: var(--frame-shadow);
+  }
+  .phone-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 34px;
+    background: var(--bg);
+  }
+  .camera {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    z-index: 8;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #101114;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, .16);
+    transform: translateX(-50%);
+  }
+  [data-theme="dark"] .camera { background: #000; box-shadow: 0 0 0 2px rgba(255, 255, 255, .08); }
+
+  .app-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    color: var(--ink);
+    background:
+      radial-gradient(300px 300px at 100% 0%, var(--bg-grad-1), transparent 72%),
+      radial-gradient(260px 260px at 0% 100%, var(--bg-grad-2), transparent 72%),
+      var(--bg);
+  }
+  .statusbar {
+    position: relative;
+    z-index: 7;
+    flex: 0 0 40px;
+    height: 40px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--ink);
+    opacity: .86;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .status-icons { display: flex; align-items: center; gap: 5px; }
+  .status-icons svg { display: block; }
+
+  .app-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 2px 18px 92px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .app-content::-webkit-scrollbar { display: none; }
+
+  .topline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+  }
+  .eyebrow {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .05em;
+  }
+  h2 {
+    margin: 6px 0 0;
+    font-size: 26px;
+    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -.035em;
+  }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .icon-btn .icon { width: 17px; height: 17px; }
+  .icon-btn.small { width: 34px; height: 34px; }
+  .icon-btn.small .icon { width: 16px; height: 16px; }
+
+  .section-head {
+    margin: 22px 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .section-head .muted { color: var(--muted); font-size: 10px; font-weight: 400; }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--surface);
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 22px;
+    right: 22px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--highlight), transparent);
+    pointer-events: none;
+  }
+
+  .metric-hero {
+    padding: 16px 16px 14px;
+    border-color: rgba(var(--accent-rgb), .16);
+    background:
+      radial-gradient(130% 120% at 100% 0%, rgba(var(--accent-rgb), .14), transparent 58%),
+      var(--surface);
+  }
+  .metric-hero-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .metric-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .tag {
+    padding: 4px 8px;
+    border: 1px solid rgba(var(--accent-rgb), .22);
+    border-radius: 999px;
+    background: rgba(var(--accent-rgb), .08);
+    color: color-mix(in srgb, var(--accent) 68%, var(--ink));
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .hero-row {
+    margin-top: 14px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .hero-value {
+    color: var(--ink);
+    font-size: 46px;
+    font-weight: 600;
+    line-height: .92;
+    letter-spacing: -.055em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .hero-value .unit {
+    margin-left: 4px;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .delta {
+    padding-bottom: 4px;
+    color: var(--ink-2);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .delta .arrow { margin-right: 2px; color: color-mix(in srgb, var(--accent) 68%, var(--ink)); font-size: 12px; }
+  .spark { display: block; width: 100%; height: 30px; color: var(--accent); overflow: visible; }
+  .spark-lg { height: 38px; margin-top: 12px; }
+  .metric-foot {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+  .metric-foot .link { color: var(--ink-2); font-weight: 600; }
+
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .metric-card {
+    padding: 13px 13px 12px;
+    background:
+      radial-gradient(120% 130% at 100% 0%, rgba(var(--accent-rgb), .08), transparent 60%),
+      var(--surface);
+  }
+  .metric-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .metric-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .metric-card .dot { width: 6px; height: 6px; }
+  .mini-add {
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .mini-add .icon { width: 12px; height: 12px; }
+  .metric-card-value {
+    margin-top: 14px;
+    color: var(--ink);
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -.045em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .metric-card-value .unit {
+    margin-left: 3px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .metric-card-meta {
+    margin-top: 6px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .metric-card .delta { margin-top: 0; padding: 0; font-size: 10px; }
+  .metric-date {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-card .spark { height: 26px; margin-top: 8px; }
+
+  .fab {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 22px;
+    z-index: 5;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 999px;
+    background: var(--fab-bg);
+    color: var(--fab-fg);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .01em;
+    cursor: pointer;
+  }
+  .fab .icon { width: 16px; height: 16px; }
+  .home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    z-index: 6;
+    width: 104px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(var(--ink-rgb), .18);
+    transform: translateX(-50%);
+  }
+
+  .detail-content { padding-bottom: 36px; }
+  .nav-row {
+    padding-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .nav-title {
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -.01em;
+  }
+  .detail-head { margin-top: 20px; }
+  .detail-head .hero-value { font-size: 50px; }
+  .detail-meta {
+    margin-top: 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+  .detail-meta .delta { padding: 0; font-size: 10.5px; }
+
+  .segmented {
+    margin-top: 18px;
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+  .segmented button {
+    flex: 1;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  .segmented button.active { background: var(--ink); color: var(--bg); }
+
+  .chart-card { margin-top: 12px; padding: 13px 10px 8px; }
+  .chart-head {
+    padding: 0 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .chart-badge {
+    padding: 3px 7px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 9.5px;
+    font-weight: 500;
+  }
+  .trend-chart {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 2px;
+    color: var(--accent);
+    overflow: visible;
+  }
+  .trend-chart text { font-family: inherit; }
+  .trend-grid { stroke: var(--line); stroke-width: 1; }
+  .trend-axis { fill: var(--muted); font-size: 10px; }
+  .trend-area { fill: url(#trendFill); }
+  .trend-line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .trend-avg {
+    fill: none;
+    stroke: rgba(var(--accent-rgb), .42);
+    stroke-width: 1.2;
+    stroke-dasharray: 4 4;
+    stroke-linecap: round;
+  }
+  .trend-guide { stroke: rgba(var(--accent-rgb), .25); stroke-width: 1; stroke-dasharray: 3 4; }
+  .trend-halo { fill: rgba(var(--accent-rgb), .12); }
+  .trend-dot { fill: var(--accent); stroke: var(--surface); stroke-width: 2.4; }
+  .tooltip-bg { fill: var(--surface-strong); stroke: var(--line); stroke-width: 1; }
+  .tooltip-date { fill: var(--muted); font-size: 8.5px; }
+  .tooltip-value { fill: var(--ink); font-size: 11.5px; font-weight: 600; }
+
+  .stat-row { margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat {
+    padding: 10px 11px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+  .stat-label { display: block; color: var(--muted); font-size: 9.5px; }
+  .stat-value {
+    display: block;
+    margin-top: 5px;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-value .unit { margin-left: 2px; color: var(--muted); font-size: 9px; font-weight: 500; }
+
+  .tabs {
+    margin-top: 20px;
+    display: flex;
+    gap: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    position: relative;
+    padding: 0 0 10px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tab.active { color: var(--ink); }
+  .tab.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ink);
+  }
+
+  .history { margin-top: 2px; }
+  .history-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 11px 2px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 10px;
+  }
+  .history-row:last-child { border-bottom: 0; }
+  .history-row .date { width: 58px; flex: 0 0 auto; color: var(--muted); font-size: 10px; }
+  .history-row .value {
+    flex: 1;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .history-row .note { color: var(--muted); font-size: 9.5px; }
+  .history-row .chev { width: 11px; height: 11px; color: var(--muted); }
+
+  .ghost-home {
+    position: absolute;
+    inset: 40px 0 0 0;
+    z-index: 1;
+    padding: 2px 18px;
+    overflow: hidden;
+    opacity: .55;
+    pointer-events: none;
+  }
+  .scrim {
+    position: absolute;
+    inset: 40px 0 0 0;
+    z-index: 2;
+    background: rgba(28, 27, 24, .28);
+  }
+  [data-theme="dark"] .scrim { background: rgba(0, 0, 0, .54); }
+  .sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    padding: 9px 18px 18px;
+    border-top: 1px solid var(--line-strong);
+    border-radius: 28px 28px 0 0;
+    background: var(--sheet);
+    --accent: var(--clay);
+    --accent-rgb: 201, 111, 74;
+  }
+  .sheet-handle {
+    width: 34px;
+    height: 4px;
+    margin: 0 auto 13px;
+    border-radius: 999px;
+    background: var(--line-strong);
+  }
+  .sheet-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .sheet-head h3 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -.025em;
+  }
+  .metric-chips {
+    display: flex;
+    gap: 7px;
+    padding: 14px 0 2px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .metric-chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto;
+    padding: 8px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .chip.active {
+    border-color: rgba(var(--accent-rgb), .28);
+    background: rgba(var(--accent-rgb), .10);
+    color: color-mix(in srgb, var(--accent) 68%, var(--ink));
+  }
+  .quick-value {
+    min-height: 64px;
+    margin: 16px 0 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .quick-value .number {
+    color: var(--ink);
+    font-size: 52px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -.055em;
+    font-variant-numeric: tabular-nums;
+  }
+  .quick-value .unit { color: var(--muted); font-size: 13px; font-weight: 500; }
+  .replace-hint {
+    margin-top: 7px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 10px;
+  }
+  .replace-hint[hidden] { display: none; }
+  .caret {
+    width: 2px;
+    height: 32px;
+    margin-left: 2px;
+    align-self: center;
+    border-radius: 2px;
+    background: var(--accent);
+    animation: blink 1.2s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .quick-meta {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 10px;
+  }
+  .meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--ink-2);
+    font: inherit;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  .meta-pill .icon { width: 13px; height: 13px; }
+  .keypad {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+  .key {
+    height: 48px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 14px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 20px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+  .key:active { background: rgba(var(--ink-rgb), .06); }
+  .key .icon { width: 19px; height: 19px; color: var(--ink-2); }
+  .save {
+    width: 100%;
+    height: 48px;
+    margin-top: 12px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--fab-bg);
+    color: var(--fab-fg);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  .save.saved { background: var(--teal); color: var(--bg); }
+  .quick .home-indicator { z-index: 5; }
+
+  .token-panel {
+    max-width: 1320px;
+    margin: 0 auto 30px;
+    padding: 22px 26px;
+    display: grid;
+    grid-template-columns: 1.25fr .9fr 1fr 1fr;
+    gap: 26px;
+    align-items: start;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--surface);
+  }
+  .token-kicker {
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .1em;
+  }
+  .token-panel h3 {
+    margin: 6px 0 8px;
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -.025em;
+  }
+  .token-panel p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.75;
+  }
+  .principles { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .principle {
+    padding: 4px 7px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-2);
+    font-size: 8px;
+  }
+  .token-group-title {
+    color: var(--muted);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: .1em;
+  }
+  .swatches { margin-top: 12px; display: flex; gap: 8px; }
+  .swatch {
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(0, 0, 0, .06);
+    border-radius: 50%;
+  }
+  .swatch-label { margin-top: 8px; color: var(--muted); font-size: 8px; line-height: 1.6; }
+  .type-samples {
+    margin-top: 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .type-samples .t1 { font-size: 28px; font-weight: 600; letter-spacing: -.05em; }
+  .type-samples .t2 { font-size: 17px; font-weight: 600; letter-spacing: -.03em; }
+  .type-samples .t3 { color: var(--muted); font-size: 12px; font-weight: 500; }
+  .type-note { margin-top: 8px; color: var(--muted); font-size: 8px; }
+  .radius-row { margin-top: 12px; display: flex; gap: 9px; }
+  .radius {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: end center;
+    padding-bottom: 4px;
+    border: 1px solid var(--line-strong);
+    background: var(--surface-strong);
+    color: var(--muted);
+    font-size: 7px;
+  }
+  .footer {
+    padding: 0 40px 28px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: .02em;
+  }
+
+  @media (max-width: 1240px) {
+    .stage { gap: 20px; }
+    .token-panel { grid-template-columns: 1.2fr 1fr 1fr; }
+    .token-panel > :last-child { grid-column: 3; }
+  }
+  @media (max-width: 980px) {
+    .page-header { padding: 28px 24px 8px; }
+    .stage { padding: 20px 24px 38px; }
+    .token-panel { margin: 0 24px 28px; grid-template-columns: 1fr 1fr; }
+    .token-panel > :last-child { grid-column: auto; }
+    .footer { padding: 0 24px 24px; }
+  }
+  @media (max-width: 760px) {
+    .page-header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 22px 16px 6px; }
+    .stage { padding: 18px 16px 30px; flex-direction: column; align-items: center; gap: 22px; }
+    .phone-wrap { width: 100%; align-items: center; }
+    .phone-label { width: min(360px, calc(100vw - 32px)); }
+    .token-panel { margin: 0 16px 24px; padding: 20px; grid-template-columns: 1fr; gap: 20px; }
+    .footer { padding: 0 16px 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+  }
+
+  /* 单屏审阅：?view=home|detail|quick&theme=light|dark */
+  .stage-solo {
+    max-width: none;
+    min-height: 100vh;
+    padding: 10px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .stage-solo .phone { box-shadow: none; }
+  .stage-solo .phone-wrap { width: 360px; }
+  .stage-solo .phone-label { width: 360px; }
+</style>
+</head>
+<body data-theme="light">
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-settings" viewBox="0 0 24 24">
+    <path d="M4 7h10M18 7h2M4 17h2M10 17h10"/>
+    <circle cx="16" cy="7" r="2.2"/>
+    <circle cx="8" cy="17" r="2.2"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24">
+    <circle cx="5" cy="12" r="1.35" fill="currentColor" stroke="none"/>
+    <circle cx="12" cy="12" r="1.35" fill="currentColor" stroke="none"/>
+    <circle cx="19" cy="12" r="1.35" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24">
+    <rect x="4" y="5.5" width="16" height="14" rx="3"/>
+    <path d="M8 3.5v4M16 3.5v4M4 10h16"/>
+  </symbol>
+  <symbol id="i-note" viewBox="0 0 24 24">
+    <path d="M5 19l3.5-.8L19 7.7a2.1 2.1 0 0 0-3-3L5.5 15.2 5 19Z"/>
+    <path d="M13.5 6.5l3 3"/>
+  </symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-backspace" viewBox="0 0 24 24">
+    <path d="M9 5h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5-7 5-7Z"/>
+    <path d="M12 9l4 6M16 9l-4 6"/>
+  </symbol>
+</svg>
+
+<div class="page">
+  <header class="page-header">
+    <div class="brand">
+      <div class="brand-mark">量</div>
+      <div>
+        <div class="brand-title">量迹 <span class="badge">PHASE 0</span></div>
+        <div class="brand-sub">柔光健康 · 单指标多视图 · 视觉原型</div>
+      </div>
+    </div>
+    <div class="theme-toggle" role="group" aria-label="主题切换">
+      <button type="button" data-theme-btn="light" class="active">浅色</button>
+      <button type="button" data-theme-btn="dark">深色</button>
+    </div>
+  </header>
+
+  <main class="stage">
+
+    <!-- 01 首页 -->
+    <section class="phone-wrap">
+      <div class="phone-label">
+        <span class="num">01</span><span>首页</span><span class="label-note">指标各自成卡</span>
+      </div>
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="camera"></div>
+          <div class="app-screen">
+            <div class="statusbar">
+              <span>09:41</span>
+              <span class="status-icons" aria-hidden="true">
+                <svg viewBox="0 0 18 12" width="15" height="10" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                <svg viewBox="0 0 16 12" width="14" height="11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1.5 4.5a9 9 0 0 1 13 0"/><path d="M4 7a5.5 5.5 0 0 1 8 0"/><path d="M6.5 9.4a2.2 2.2 0 0 1 3 0"/><circle cx="8" cy="11" r=".8" fill="currentColor" stroke="none"/></svg>
+                <svg viewBox="0 0 26 12" width="23" height="11" fill="none" stroke="currentColor" stroke-width="1"><rect x=".5" y=".5" width="22" height="11" rx="3"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="currentColor" stroke="none"/><path d="M24.5 4.2v3.6" stroke-linecap="round"/></svg>
+              </span>
+            </div>
+
+            <div class="app-content">
+              <div class="topline">
+                <div>
+                  <div class="eyebrow">10月29日 · 周四</div>
+                  <h2>身体记录</h2>
+                </div>
+                <button class="icon-btn" type="button" aria-label="设置">
+                  <svg class="icon"><use href="#i-settings"/></svg>
+                </button>
+              </div>
+
+              <div class="section-head">
+                <span>最近记录</span><span class="muted">今天 07:40</span>
+              </div>
+
+              <article class="metric-hero card" style="--accent: var(--clay); --accent-rgb: 201, 111, 74;">
+                <div class="metric-hero-head">
+                  <div class="metric-title"><span class="dot"></span>腰围</div>
+                  <span class="tag">今天</span>
+                </div>
+                <div class="hero-row">
+                  <div class="hero-value">78.5<span class="unit">cm</span></div>
+                  <div class="delta"><span class="arrow">↓</span>1.2 cm</div>
+                </div>
+                <svg class="spark spark-lg" viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="sparkHero" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="currentColor" stop-opacity=".24"/>
+                      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M0 30 C 20 27, 28 31, 44 25 S 70 17, 88 21 S 118 28, 136 17 S 166 11, 184 15 S 208 18, 220 20 S 232 23, 240 26 L 240 40 L 0 40 Z" fill="url(#sparkHero)"/>
+                  <path d="M0 30 C 20 27, 28 31, 44 25 S 70 17, 88 21 S 118 28, 136 17 S 166 11, 184 15 S 208 18, 220 20 S 232 23, 240 26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                </svg>
+                <div class="metric-foot"><span>较上次 10月22日</span><span class="link">查看趋势 →</span></div>
+              </article>
+
+              <div class="section-head">
+                <span>其他指标</span><span class="muted">4 项</span>
+              </div>
+
+              <div class="metric-grid">
+                <article class="metric-card card" style="--accent: var(--teal); --accent-rgb: 63, 127, 114;">
+                  <div class="metric-card-head">
+                    <div class="metric-name"><span class="dot"></span>体重</div>
+                    <button class="mini-add" type="button" aria-label="记录体重"><svg class="icon"><use href="#i-plus"/></svg></button>
+                  </div>
+                  <div class="metric-card-value">68.4<span class="unit">kg</span></div>
+                  <div class="metric-card-meta">
+                    <div class="delta"><span class="arrow">↓</span>0.6 kg</div>
+                    <span class="metric-date">10月27日</span>
+                  </div>
+                  <svg class="spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+                    <defs><linearGradient id="sparkWeight" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".20"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+                    <path d="M0 25 C 12 23, 18 26, 30 20 S 48 13, 60 17 S 78 22, 90 12 S 106 7, 112 9 S 118 13, 120 16 L 120 32 L 0 32 Z" fill="url(#sparkWeight)"/>
+                    <path d="M0 25 C 12 23, 18 26, 30 20 S 48 13, 60 17 S 78 22, 90 12 S 106 7, 112 9 S 118 13, 120 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                  </svg>
+                </article>
+
+                <article class="metric-card card" style="--accent: var(--ochre); --accent-rgb: 185, 138, 62;">
+                  <div class="metric-card-head">
+                    <div class="metric-name"><span class="dot"></span>胸围</div>
+                    <button class="mini-add" type="button" aria-label="记录胸围"><svg class="icon"><use href="#i-plus"/></svg></button>
+                  </div>
+                  <div class="metric-card-value">96.2<span class="unit">cm</span></div>
+                  <div class="metric-card-meta">
+                    <div class="delta"><span class="arrow">↑</span>0.2 cm</div>
+                    <span class="metric-date">10月25日</span>
+                  </div>
+                  <svg class="spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+                    <defs><linearGradient id="sparkChest" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".20"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+                    <path d="M0 18 C 12 17, 20 20, 32 17 S 52 12, 64 15 S 84 20, 96 15 S 110 13, 120 14 L 120 32 L 0 32 Z" fill="url(#sparkChest)"/>
+                    <path d="M0 18 C 12 17, 20 20, 32 17 S 52 12, 64 15 S 84 20, 96 15 S 110 13, 120 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                  </svg>
+                </article>
+
+                <article class="metric-card card" style="--accent: var(--indigo); --accent-rgb: 93, 111, 168;">
+                  <div class="metric-card-head">
+                    <div class="metric-name"><span class="dot"></span>臂围</div>
+                    <button class="mini-add" type="button" aria-label="记录臂围"><svg class="icon"><use href="#i-plus"/></svg></button>
+                  </div>
+                  <div class="metric-card-value">32.1<span class="unit">cm</span></div>
+                  <div class="metric-card-meta">
+                    <div class="delta"><span class="arrow">↑</span>0.4 cm</div>
+                    <span class="metric-date">10月28日</span>
+                  </div>
+                  <svg class="spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+                    <defs><linearGradient id="sparkArm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".20"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+                    <path d="M0 24 C 14 24, 20 18, 32 20 S 52 24, 64 18 S 82 10, 94 14 S 110 10, 120 7 L 120 32 L 0 32 Z" fill="url(#sparkArm)"/>
+                    <path d="M0 24 C 14 24, 20 18, 32 20 S 52 24, 64 18 S 82 10, 94 14 S 110 10, 120 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                  </svg>
+                </article>
+
+                <article class="metric-card card" style="--accent: var(--plum); --accent-rgb: 138, 100, 120;">
+                  <div class="metric-card-head">
+                    <div class="metric-name"><span class="dot"></span>臀围</div>
+                    <button class="mini-add" type="button" aria-label="记录臀围"><svg class="icon"><use href="#i-plus"/></svg></button>
+                  </div>
+                  <div class="metric-card-value">94.0<span class="unit">cm</span></div>
+                  <div class="metric-card-meta">
+                    <div class="delta"><span class="arrow">↓</span>0.8 cm</div>
+                    <span class="metric-date">10月26日</span>
+                  </div>
+                  <svg class="spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true">
+                    <defs><linearGradient id="sparkHip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".20"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>
+                    <path d="M0 14 C 14 15, 22 20, 34 18 S 54 10, 66 14 S 86 22, 98 17 S 112 20, 120 18 L 120 32 L 0 32 Z" fill="url(#sparkHip)"/>
+                    <path d="M0 14 C 14 15, 22 20, 34 18 S 54 10, 66 14 S 86 22, 98 17 S 112 20, 120 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                  </svg>
+                </article>
+              </div>
+            </div>
+
+            <button class="fab" type="button">
+              <svg class="icon"><use href="#i-plus"/></svg>记录
+            </button>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 单指标详情 -->
+    <section class="phone-wrap">
+      <div class="phone-label">
+        <span class="num">02</span><span>单指标详情</span><span class="label-note">趋势为主视图</span>
+      </div>
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="camera"></div>
+          <div class="app-screen">
+            <div class="statusbar">
+              <span>09:41</span>
+              <span class="status-icons" aria-hidden="true">
+                <svg viewBox="0 0 18 12" width="15" height="10" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                <svg viewBox="0 0 16 12" width="14" height="11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1.5 4.5a9 9 0 0 1 13 0"/><path d="M4 7a5.5 5.5 0 0 1 8 0"/><path d="M6.5 9.4a2.2 2.2 0 0 1 3 0"/><circle cx="8" cy="11" r=".8" fill="currentColor" stroke="none"/></svg>
+                <svg viewBox="0 0 26 12" width="23" height="11" fill="none" stroke="currentColor" stroke-width="1"><rect x=".5" y=".5" width="22" height="11" rx="3"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="currentColor" stroke="none"/><path d="M24.5 4.2v3.6" stroke-linecap="round"/></svg>
+              </span>
+            </div>
+
+            <div class="app-content detail-content">
+              <div class="nav-row">
+                <button class="icon-btn" type="button" aria-label="返回">
+                  <svg class="icon"><use href="#i-back"/></svg>
+                </button>
+                <div class="nav-title">腰围</div>
+                <button class="icon-btn" type="button" aria-label="更多">
+                  <svg class="icon"><use href="#i-more"/></svg>
+                </button>
+              </div>
+
+              <div class="detail-head">
+                <div class="hero-value">78.5<span class="unit">cm</span></div>
+                <div class="detail-meta">
+                  <span class="delta"><span class="arrow">↓</span>1.2 cm 较 10月22日</span>
+                  <span>·</span>
+                  <span>今天 07:40</span>
+                </div>
+              </div>
+
+              <div class="segmented" role="group" aria-label="时间范围">
+                <button type="button">1M</button>
+                <button type="button" class="active">3M</button>
+                <button type="button">6M</button>
+                <button type="button">1Y</button>
+                <button type="button">ALL</button>
+              </div>
+
+              <div class="chart-card card" style="--accent: var(--clay); --accent-rgb: 201, 111, 74;">
+                <div class="chart-head">
+                  <span>趋势</span>
+                  <span class="chart-badge">7 日均线</span>
+                </div>
+                <svg class="trend-chart" viewBox="0 0 340 182" role="img" aria-label="腰围最近三个月的趋势，最新 78.5 厘米">
+                  <defs>
+                    <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stop-color="currentColor" stop-opacity=".20"/>
+                      <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <g class="trend-grid" id="trendGrid"></g>
+                  <g class="trend-axis" id="trendAxis"></g>
+                  <g id="trendSeries"></g>
+                </svg>
+              </div>
+
+              <div class="stat-row">
+                <div class="stat"><span class="stat-label">最低</span><span class="stat-value">77.8<span class="unit">cm</span></span></div>
+                <div class="stat"><span class="stat-label">平均</span><span class="stat-value">79.2<span class="unit">cm</span></span></div>
+                <div class="stat"><span class="stat-label">最高</span><span class="stat-value">81.4<span class="unit">cm</span></span></div>
+              </div>
+
+              <div class="tabs" role="tablist" aria-label="单指标视图">
+                <button class="tab active" type="button" role="tab" aria-selected="true">趋势</button>
+                <button class="tab" type="button" role="tab" aria-selected="false">分布</button>
+                <button class="tab" type="button" role="tab" aria-selected="false">日历</button>
+                <button class="tab" type="button" role="tab" aria-selected="false">对比</button>
+              </div>
+
+              <div class="section-head">
+                <span>最近记录</span><span class="muted">查看全部 →</span>
+              </div>
+              <div class="history">
+                <div class="history-row">
+                  <span class="date">10月29日</span><span class="value">78.5 cm</span><span class="note">今天 07:40</span>
+                  <svg class="icon chev"><use href="#i-chev"/></svg>
+                </div>
+                <div class="history-row">
+                  <span class="date">10月22日</span><span class="value">79.7 cm</span><span class="note">上周四</span>
+                  <svg class="icon chev"><use href="#i-chev"/></svg>
+                </div>
+                <div class="history-row">
+                  <span class="date">10月15日</span><span class="value">79.2 cm</span><span class="note">两周前</span>
+                  <svg class="icon chev"><use href="#i-chev"/></svg>
+                </div>
+              </div>
+            </div>
+            <div class="home-indicator"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 快速记录 -->
+    <section class="phone-wrap">
+      <div class="phone-label">
+        <span class="num">03</span><span>快速记录</span><span class="label-note">窗口内 sheet</span>
+      </div>
+      <div class="phone">
+        <div class="phone-inner">
+          <div class="camera"></div>
+          <div class="app-screen quick">
+            <div class="statusbar">
+              <span>09:41</span>
+              <span class="status-icons" aria-hidden="true">
+                <svg viewBox="0 0 18 12" width="15" height="10" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+                <svg viewBox="0 0 16 12" width="14" height="11" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M1.5 4.5a9 9 0 0 1 13 0"/><path d="M4 7a5.5 5.5 0 0 1 8 0"/><path d="M6.5 9.4a2.2 2.2 0 0 1 3 0"/><circle cx="8" cy="11" r=".8" fill="currentColor" stroke="none"/></svg>
+                <svg viewBox="0 0 26 12" width="23" height="11" fill="none" stroke="currentColor" stroke-width="1"><rect x=".5" y=".5" width="22" height="11" rx="3"/><rect x="2" y="2" width="17" height="8" rx="1.6" fill="currentColor" stroke="none"/><path d="M24.5 4.2v3.6" stroke-linecap="round"/></svg>
+              </span>
+            </div>
+
+            <div class="ghost-home" aria-hidden="true">
+              <div class="topline">
+                <div>
+                  <div class="eyebrow">10月29日 · 周四</div>
+                  <h2>身体记录</h2>
+                </div>
+                <button class="icon-btn" type="button" tabindex="-1">
+                  <svg class="icon"><use href="#i-settings"/></svg>
+                </button>
+              </div>
+              <div class="section-head"><span>最近记录</span><span class="muted">今天 07:40</span></div>
+              <article class="metric-hero card" style="--accent: var(--clay); --accent-rgb: 201, 111, 74;">
+                <div class="metric-hero-head">
+                  <div class="metric-title"><span class="dot"></span>腰围</div>
+                  <span class="tag">今天</span>
+                </div>
+                <div class="hero-row">
+                  <div class="hero-value">78.5<span class="unit">cm</span></div>
+                  <div class="delta"><span class="arrow">↓</span>1.2 cm</div>
+                </div>
+                <svg class="spark spark-lg" viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0 30 C 20 27, 28 31, 44 25 S 70 17, 88 21 S 118 28, 136 17 S 166 11, 184 15 S 208 18, 220 20 S 232 23, 240 26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                </svg>
+              </article>
+            </div>
+            <div class="scrim"></div>
+
+            <div class="sheet">
+              <div class="sheet-handle"></div>
+              <div class="sheet-head">
+                <h3>记录数据</h3>
+                <button class="icon-btn small" type="button" aria-label="关闭">
+                  <svg class="icon"><use href="#i-close"/></svg>
+                </button>
+              </div>
+
+              <div class="metric-chips" role="group" aria-label="选择指标">
+                <button class="chip" type="button" data-metric="weight" data-unit="kg" data-value="68.4" data-accent="var(--teal)" data-rgb="63, 127, 114">体重</button>
+                <button class="chip active" type="button" data-metric="waist" data-unit="cm" data-value="78.5" data-accent="var(--clay)" data-rgb="201, 111, 74" data-today="1">腰围</button>
+                <button class="chip" type="button" data-metric="chest" data-unit="cm" data-value="96.2" data-accent="var(--ochre)" data-rgb="185, 138, 62">胸围</button>
+                <button class="chip" type="button" data-metric="arm" data-unit="cm" data-value="32.1" data-accent="var(--indigo)" data-rgb="93, 111, 168">臂围</button>
+                <button class="chip" type="button" data-metric="hip" data-unit="cm" data-value="94.0" data-accent="var(--plum)" data-rgb="138, 100, 120">臀围</button>
+              </div>
+
+              <div class="quick-value">
+                <span class="number" id="quickNumber">78.5</span>
+                <span class="caret" aria-hidden="true"></span>
+                <span class="unit" id="quickUnit">cm</span>
+              </div>
+              <div class="replace-hint" id="replaceHint">今天 07:40 已记录 · 保存将替换</div>
+
+              <div class="quick-meta">
+                <button class="meta-pill" type="button">
+                  <svg class="icon"><use href="#i-calendar"/></svg>今天 · 10月29日
+                </button>
+                <button class="meta-pill" type="button">
+                  <svg class="icon"><use href="#i-note"/></svg>添加备注
+                </button>
+              </div>
+
+              <div class="keypad" aria-label="数字键盘">
+                <button class="key" type="button" data-key="1">1</button>
+                <button class="key" type="button" data-key="2">2</button>
+                <button class="key" type="button" data-key="3">3</button>
+                <button class="key" type="button" data-key="4">4</button>
+                <button class="key" type="button" data-key="5">5</button>
+                <button class="key" type="button" data-key="6">6</button>
+                <button class="key" type="button" data-key="7">7</button>
+                <button class="key" type="button" data-key="8">8</button>
+                <button class="key" type="button" data-key="9">9</button>
+                <button class="key" type="button" data-key=".">.</button>
+                <button class="key" type="button" data-key="0">0</button>
+                <button class="key" type="button" data-key="back" aria-label="删除">
+                  <svg class="icon"><use href="#i-backspace"/></svg>
+                </button>
+              </div>
+
+              <button class="save" type="button" id="saveBtn">替换今日记录</button>
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="token-panel">
+    <div>
+      <div class="token-kicker">DESIGN LANGUAGE</div>
+      <h3>柔光健康 / Soft Health</h3>
+      <p>暖白与墨黑为底，半透明表面、细描边、无阴影；每个指标拥有一个低饱和强调色。数字是第一主角，图表只保留必要的信息。</p>
+      <div class="principles">
+        <span class="principle">No shadows</span>
+        <span class="principle">No real-time blur</span>
+        <span class="principle">Tabular numerals</span>
+        <span class="principle">One accent per metric</span>
+      </div>
+    </div>
+    <div>
+      <div class="token-group-title">ACCENT PALETTE</div>
+      <div class="swatches">
+        <span class="swatch" style="background: var(--clay)"></span>
+        <span class="swatch" style="background: var(--teal)"></span>
+        <span class="swatch" style="background: var(--ochre)"></span>
+        <span class="swatch" style="background: var(--indigo)"></span>
+        <span class="swatch" style="background: var(--plum)"></span>
+        <span class="swatch" style="background: var(--sage)"></span>
+      </div>
+      <div class="swatch-label">陶土 · 青绿 · 赭石 · 靛蓝 · 梅子 · 鼠尾草<br>底色 #F7F4EF / #0E0F11 · 表面 72%</div>
+    </div>
+    <div>
+      <div class="token-group-title">TYPE &amp; RADIUS</div>
+      <div class="type-samples"><span class="t1">78.5</span><span class="t2">身体记录</span><span class="t3">cm</span></div>
+      <div class="type-note">Display 46–52 / Title 26 / Body 13–15 / Label 10–11</div>
+      <div class="type-note">Spacing 4 / 8 / 12 / 16 / 20 / 24 / 32 · Screen 20</div>
+      <div class="radius-row">
+        <div class="radius" style="border-radius: 14px;">24</div>
+        <div class="radius" style="border-radius: 18px;">28</div>
+        <div class="radius" style="border-radius: 8px;">14</div>
+      </div>
+    </div>
+    <div>
+      <div class="token-group-title">MOTION &amp; NOTES</div>
+      <p style="margin-top: 10px;">240ms spring · 400ms chart draw<br>数字 180ms 淡入 · 尊重系统“减少动态效果”。</p>
+      <p style="margin-top: 8px;">展示框的环境阴影仅用于陈列；App 内不使用阴影或实时高斯模糊。</p>
+    </div>
+  </section>
+
+  <footer class="footer">Phase 0 · 视觉原型，不含业务代码 · 量迹 / Soft Health</footer>
+</div>
+
+<script>
+  const body = document.body;
+
+  document.querySelectorAll('[data-theme-btn]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      body.dataset.theme = btn.dataset.themeBtn;
+      document.querySelectorAll('[data-theme-btn]').forEach((b) => {
+        b.classList.toggle('active', b === btn);
+      });
+    });
+  });
+
+  document.querySelectorAll('.segmented, .tabs').forEach((group) => {
+    group.addEventListener('click', (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      group.querySelectorAll('button').forEach((b) => b.classList.toggle('active', b === button));
+    });
+  });
+
+  let quickValue = '78.5';
+  let quickUnit = 'cm';
+  const numberEl = document.getElementById('quickNumber');
+  const unitEl = document.getElementById('quickUnit');
+  const sheetEl = document.querySelector('.sheet');
+  const saveBtn = document.getElementById('saveBtn');
+  const replaceHint = document.getElementById('replaceHint');
+  let saveLabel = '替换今日记录';
+
+  function renderQuickValue() {
+    numberEl.textContent = quickValue === '' ? '0' : quickValue;
+    unitEl.textContent = quickUnit;
+  }
+
+  document.querySelectorAll('.metric-chips .chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.metric-chips .chip').forEach((c) => c.classList.remove('active'));
+      chip.classList.add('active');
+      quickValue = chip.dataset.value;
+      quickUnit = chip.dataset.unit;
+      saveLabel = chip.dataset.today === '1' ? '替换今日记录' : '保存记录';
+      replaceHint.hidden = chip.dataset.today !== '1';
+      saveBtn.textContent = saveLabel;
+      sheetEl.style.setProperty('--accent', chip.dataset.accent);
+      sheetEl.style.setProperty('--accent-rgb', chip.dataset.rgb);
+      renderQuickValue();
+    });
+  });
+
+  document.querySelectorAll('.key').forEach((key) => {
+    key.addEventListener('click', () => {
+      const value = key.dataset.key;
+      if (value === 'back') {
+        quickValue = quickValue.slice(0, -1);
+      } else if (value === '.') {
+        if (!quickValue.includes('.')) quickValue = (quickValue || '0') + '.';
+      } else {
+        if (quickValue.replace('.', '').length >= 5) return;
+        quickValue = quickValue === '0' ? value : quickValue + value;
+      }
+      renderQuickValue();
+    });
+  });
+
+  saveBtn.addEventListener('click', () => {
+    saveBtn.classList.add('saved');
+    saveBtn.textContent = saveLabel.startsWith('替换') ? '已更新' : '已保存';
+    window.setTimeout(() => {
+      saveBtn.classList.remove('saved');
+      saveBtn.textContent = saveLabel;
+    }, 1400);
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const themeParam = params.get('theme');
+  if (themeParam === 'light' || themeParam === 'dark') {
+    body.dataset.theme = themeParam;
+    document.querySelectorAll('[data-theme-btn]').forEach((b) => {
+      b.classList.toggle('active', b.dataset.themeBtn === themeParam);
+    });
+  }
+
+  const viewParam = params.get('view');
+  const views = ['home', 'detail', 'quick'];
+  if (views.includes(viewParam)) {
+    const index = views.indexOf(viewParam);
+    document.querySelectorAll('.phone-wrap').forEach((wrap, i) => {
+      wrap.style.display = i === index ? 'flex' : 'none';
+    });
+    document.querySelector('.page-header').style.display = 'none';
+    document.querySelector('.token-panel').style.display = 'none';
+    document.querySelector('.footer').style.display = 'none';
+    document.querySelector('.stage').classList.add('stage-solo');
+  }
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  function svgNode(tag, attrs = {}) {
+    const node = document.createElementNS(SVG_NS, tag);
+    Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+    return node;
+  }
+  function svgText(parent, attrs, content) {
+    const node = svgNode('text', attrs);
+    node.textContent = content;
+    parent.appendChild(node);
+    return node;
+  }
+  function smoothPath(points) {
+    if (points.length < 2) return '';
+    let d = `M${points[0].x.toFixed(2)} ${points[0].y.toFixed(2)}`;
+    for (let i = 0; i < points.length - 1; i++) {
+      const p0 = points[i - 1] || points[i];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[i + 2] || p2;
+      const c1x = p1.x + (p2.x - p0.x) / 6;
+      const c1y = p1.y + (p2.y - p0.y) / 6;
+      const c2x = p2.x - (p3.x - p1.x) / 6;
+      const c2y = p2.y - (p3.y - p1.y) / 6;
+      d += ` C${c1x.toFixed(2)} ${c1y.toFixed(2)}, ${c2x.toFixed(2)} ${c2y.toFixed(2)}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`;
+    }
+    return d;
+  }
+
+  const trendData = [
+    ['2026-08-03', 80.6],
+    ['2026-08-10', 81.4],
+    ['2026-08-17', 80.6],
+    ['2026-08-24', 80.5],
+    ['2026-08-31', 79.4],
+    ['2026-09-07', 79.1],
+    ['2026-09-14', 79.4],
+    ['2026-09-21', 78.5],
+    ['2026-09-28', 77.8],
+    ['2026-10-05', 78.0],
+    ['2026-10-12', 77.8],
+    ['2026-10-19', 78.2],
+    ['2026-10-26', 79.0],
+    ['2026-10-29', 78.5]
+  ];
+  const toDay = (iso) => Date.parse(`${iso}T00:00:00Z`) / 86400000;
+  const chartStart = toDay('2026-08-01');
+  const chartEnd = toDay('2026-10-29');
+  const chartLeft = 34;
+  const chartRight = 328;
+  const chartBottom = 150;
+  const xFor = (iso) => chartLeft + ((toDay(iso) - chartStart) / (chartEnd - chartStart)) * (chartRight - chartLeft);
+  const yFor = (value) => 80 + (79 - value) * (50 / 3);
+  const points = trendData.map(([date, value]) => ({ date, value, x: xFor(date), y: yFor(value) }));
+  const last = points[points.length - 1];
+
+  const trendGrid = document.getElementById('trendGrid');
+  const trendAxis = document.getElementById('trendAxis');
+  const trendSeries = document.getElementById('trendSeries');
+
+  [82, 79, 76].forEach((value) => {
+    const y = yFor(value);
+    trendGrid.appendChild(svgNode('line', { x1: chartLeft, y1: y, x2: 330, y2: y }));
+    svgText(trendAxis, { x: 0, y: y + 3 }, value);
+  });
+
+  [
+    { date: '2026-08-01', label: '8/01', anchor: 'start', x: chartLeft },
+    { date: '2026-09-01', label: '9/01', anchor: 'middle' },
+    { date: '2026-10-01', label: '10/01', anchor: 'middle' },
+    { date: '2026-10-29', label: '10/29', anchor: 'end', x: 330 }
+  ].forEach((tick) => {
+    svgText(trendAxis, {
+      x: tick.x === undefined ? xFor(tick.date) : tick.x,
+      y: 170,
+      'text-anchor': tick.anchor
+    }, tick.label);
+  });
+
+  const lineD = smoothPath(points);
+  trendSeries.appendChild(svgNode('path', {
+    class: 'trend-area',
+    d: `${lineD} L${last.x.toFixed(2)} ${chartBottom} L${points[0].x.toFixed(2)} ${chartBottom} Z`
+  }));
+
+  const averagePoints = points.map((point, index) => {
+    const windowPoints = points.slice(Math.max(0, index - 1), Math.min(points.length, index + 2));
+    const average = windowPoints.reduce((sum, item) => sum + item.value, 0) / windowPoints.length;
+    return { x: point.x, y: yFor(average) };
+  });
+  trendSeries.appendChild(svgNode('path', {
+    class: 'trend-avg',
+    d: smoothPath(averagePoints),
+    'vector-effect': 'non-scaling-stroke'
+  }));
+
+  trendSeries.appendChild(svgNode('path', {
+    class: 'trend-line',
+    d: lineD,
+    'vector-effect': 'non-scaling-stroke'
+  }));
+  trendSeries.appendChild(svgNode('line', {
+    class: 'trend-guide',
+    x1: last.x,
+    y1: last.y,
+    x2: last.x,
+    y2: chartBottom
+  }));
+  trendSeries.appendChild(svgNode('circle', { class: 'trend-halo', cx: last.x, cy: last.y, r: 9 }));
+  trendSeries.appendChild(svgNode('circle', { class: 'trend-dot', cx: last.x, cy: last.y, r: 4.5 }));
+
+  const tooltipX = 200;
+  const tooltipY = 8;
+  const tooltip = svgNode('g');
+  tooltip.appendChild(svgNode('rect', {
+    class: 'tooltip-bg',
+    x: tooltipX,
+    y: tooltipY,
+    width: 108,
+    height: 44,
+    rx: 12
+  }));
+  svgText(tooltip, { class: 'tooltip-date', x: tooltipX + 12, y: tooltipY + 17 }, '10月29日 · 今天');
+  svgText(tooltip, { class: 'tooltip-value', x: tooltipX + 12, y: tooltipY + 35 }, '78.5 cm');
+  trendSeries.appendChild(tooltip);
+</script>
+</body>
+</html>
